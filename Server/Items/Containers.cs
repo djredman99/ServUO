@@ -17,13 +17,13 @@ namespace Server.Items
 		private Mobile m_Owner;
 		private bool m_Open;
 
-		public override int DefaultMaxWeight { get { return 0; } }
+		public override int DefaultMaxWeight => 0; 
 
-		public override bool IsVirtualItem { get { return true; } }
+		public override bool IsVirtualItem => true; 
 
-		public Mobile Owner { get { return m_Owner; } }
+		public Mobile Owner => m_Owner; 
 
-		public bool Opened { get { return m_Open; } }
+		public bool Opened => m_Open; 
 
 		public BankBox(Mobile owner)
 			: base(0xE7C)
@@ -66,9 +66,6 @@ namespace Server.Items
 				m_Owner.Send(RemovePacket);
 			}
 		}
-
-		public override void OnSingleClick(Mobile from)
-		{ }
 
 		public override void OnDoubleClick(Mobile from)
 		{ }

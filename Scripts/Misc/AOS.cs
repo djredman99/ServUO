@@ -296,37 +296,32 @@ namespace Server
             SkillMasterySpell.OnDamage(m, from, type, ref totalDamage);
             #endregion
 
-            #region Pet Training
             if (from is BaseCreature || m is BaseCreature)
             {
                 SpecialAbility.CheckCombatTrigger(from, m, ref totalDamage, type);
 
-                if (PetTrainingHelper.Enabled)
+                if (from is BaseCreature && m is BaseCreature)
                 {
-                    if (from is BaseCreature && m is BaseCreature)
+                    var profile = PetTrainingHelper.GetTrainingProfile((BaseCreature)from);
+
+                    if (profile != null)
                     {
-                        var profile = PetTrainingHelper.GetTrainingProfile((BaseCreature)from);
-
-                        if (profile != null)
-                        {
-                            profile.CheckProgress((BaseCreature)m);
-                        }
-
-                        profile = PetTrainingHelper.GetTrainingProfile((BaseCreature)m);
-
-                        if (profile != null && 0.3 > Utility.RandomDouble())
-                        {
-                            profile.CheckProgress((BaseCreature)from);
-                        }
+                        profile.CheckProgress((BaseCreature)m);
                     }
 
-                    if (from is BaseCreature && ((BaseCreature)from).Controlled && m.Player)
+                    profile = PetTrainingHelper.GetTrainingProfile((BaseCreature)m);
+
+                    if (profile != null && 0.3 > Utility.RandomDouble())
                     {
-                        totalDamage /= 2;
+                        profile.CheckProgress((BaseCreature)from);
                     }
                 }
+
+                if (from is BaseCreature && ((BaseCreature)from).Controlled && m.Player)
+                {
+                    totalDamage /= 2;
+                }
             }
-            #endregion
 
             if (type <= DamageType.Ranged)
             {
@@ -889,26 +884,12 @@ namespace Server
         {
             get
             {
-                return ExtendedGetValue((int)attribute);
+                return GetValue((int)attribute);
             }
             set
             {
                 SetValue((int)attribute, value);
             }
-        }
-
-        public int ExtendedGetValue(int bitmask)
-        {
-            int value = GetValue(bitmask);
-
-            XmlAosAttributes xaos = (XmlAosAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosAttributes));
-
-            if (xaos != null)
-            {
-                value += xaos.GetValue(bitmask);
-            }
-
-            return (value);
         }
 
         public override string ToString()
@@ -1419,26 +1400,12 @@ namespace Server
         {
             get
             {
-                return ExtendedGetValue((int)attribute);
+                return GetValue((int)attribute);
             }
             set
             {
                 SetValue((int)attribute, value);
             }
-        }
-
-        public int ExtendedGetValue(int bitmask)
-        {
-            int value = GetValue(bitmask);
-
-            XmlAosAttributes xaos = (XmlAosAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosAttributes));
-
-            if (xaos != null)
-            {
-                value += xaos.GetValue(bitmask);
-            }
-
-            return (value);
         }
 
         public void ScaleLeech(int weaponSpeed)
@@ -1453,7 +1420,7 @@ namespace Server
                 double postcap = (double)HitLeechHits / (double)ItemPropertyInfo.GetMaxIntensity(wep, AosWeaponAttribute.HitLeechHits);
                 if (postcap < 1.0) postcap = 1.0;
 
-                int newhits = (int)((wep.MlSpeed * 2500 / (100 + weaponSpeed)) * postcap);
+                int newhits = (int)((wep.Speed * 2500 / (100 + weaponSpeed)) * postcap);
 
                 if (wep is BaseRanged)
                     newhits /= 2;
@@ -1467,7 +1434,7 @@ namespace Server
                 double postcap = (double)HitLeechMana / (double)ItemPropertyInfo.GetMaxIntensity(wep, AosWeaponAttribute.HitLeechMana);
                 if (postcap < 1.0) postcap = 1.0;
 
-                int newmana = (int)((wep.MlSpeed * 2500 / (100 + weaponSpeed)) * postcap);
+                int newmana = (int)((wep.Speed * 2500 / (100 + weaponSpeed)) * postcap);
 
                 if (wep is BaseRanged)
                     newmana /= 2;
@@ -2180,26 +2147,12 @@ namespace Server
         {
             get
             {
-                return ExtendedGetValue((int)attribute);
+                return GetValue((int)attribute);
             }
             set
             {
                 SetValue((int)attribute, value);
             }
-        }
-
-        public int ExtendedGetValue(int bitmask)
-        {
-            int value = GetValue(bitmask);
-
-            XmlAosAttributes xaos = (XmlAosAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosAttributes));
-
-            if (xaos != null)
-            {
-                value += xaos.GetValue(bitmask);
-            }
-
-            return (value);
         }
 
         public override string ToString()
@@ -3026,26 +2979,12 @@ namespace Server
         {
             get
             {
-                return ExtendedGetValue((int)attribute);
+                return GetValue((int)attribute);
             }
             set
             {
                 SetValue((int)attribute, value);
             }
-        }
-
-        public int ExtendedGetValue(int bitmask)
-        {
-            int value = GetValue(bitmask);
-
-            XmlAosAttributes xaos = (XmlAosAttributes)XmlAttach.FindAttachment(Owner, typeof(XmlAosAttributes));
-
-            if (xaos != null)
-            {
-                value += xaos.GetValue(bitmask);
-            }
-
-            return (value);
         }
 
         public override string ToString()

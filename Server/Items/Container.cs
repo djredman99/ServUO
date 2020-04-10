@@ -171,14 +171,14 @@ namespace Server.Items
             ContainerData = ContainerData.GetData(ItemID);
         }
 
-        public virtual Rectangle2D Bounds { get { return ContainerData.Bounds; } }
-        public virtual int DefaultGumpID { get { return ContainerData.GumpID; } }
-        public virtual int DefaultDropSound { get { return ContainerData.DropSound; } }
+        public virtual Rectangle2D Bounds => ContainerData.Bounds; 
+        public virtual int DefaultGumpID => ContainerData.GumpID; 
+        public virtual int DefaultDropSound => ContainerData.DropSound; 
 
-        public virtual int DefaultMaxItems { get { return m_GlobalMaxItems; } }
-        public virtual int DefaultMaxWeight { get { return m_GlobalMaxWeight; } }
+        public virtual int DefaultMaxItems => m_GlobalMaxItems; 
+        public virtual int DefaultMaxWeight => m_GlobalMaxWeight; 
 
-        public virtual bool IsDecoContainer { get { return !Movable && !IsLockedDown && !IsSecure && Parent == null && !m_LiftOverride; } }
+        public virtual bool IsDecoContainer => !Movable && !IsLockedDown && !IsSecure && Parent == null && !m_LiftOverride; 
 
         public virtual int GetDroppedSound(Item item)
         {
@@ -1902,7 +1902,7 @@ namespace Server.Items
             }
         }
 
-        public virtual bool DisplaysContent { get { return true; } }
+        public virtual bool DisplaysContent => true; 
 
         public virtual bool CheckContentDisplay(Mobile from)
         {
@@ -1921,19 +1921,9 @@ namespace Server.Items
             return false;
         }
 
-        public override void OnSingleClick(Mobile from)
-        {
-            base.OnSingleClick(from);
-
-            if (CheckContentDisplay(from))
-            {
-                LabelTo(from, "({0} items, {1} stones)", TotalItems, TotalWeight);
-            }
-        }
-
 		public List<Mobile> Openers { get; set; }
 
-        public virtual bool IsPublicContainer { get { return false; } }
+        public virtual bool IsPublicContainer => false; 
 
         public override void OnDelete()
         {
@@ -1955,32 +1945,13 @@ namespace Server.Items
 
             ValidatePositions();
 
-            if (ns.HighSeas)
-            {
-                to.Send(new ContainerDisplayHS(this));
-            }
-            else
-            {
-                to.Send(new ContainerDisplay(this));
-            }
+            to.Send(new ContainerDisplay(this));
 
-            if (ns.ContainerGridLines)
-            {
-                to.Send(new ContainerContent6017(to, this));
-            }
-            else
-            {
-                to.Send(new ContainerContent(to, this));
-            }
+            to.Send(new ContainerContent(to, this));
 
-			if (to.ViewOPL)
+            foreach (var o in Items)
             {
-                var items = Items;
-
-				foreach (var o in items)
-                {
-					to.Send(o.OPLPacket);
-                }
+                to.Send(o.OPLPacket);
             }
         }
 
@@ -2175,9 +2146,9 @@ namespace Server.Items
         private readonly Rectangle2D m_Bounds;
         private readonly int m_DropSound;
 
-        public int GumpID { get { return m_GumpID; } }
-        public Rectangle2D Bounds { get { return m_Bounds; } }
-        public int DropSound { get { return m_DropSound; } }
+        public int GumpID => m_GumpID; 
+        public Rectangle2D Bounds => m_Bounds; 
+        public int DropSound => m_DropSound; 
 
         public ContainerData(int gumpID, Rectangle2D bounds, int dropSound)
         {

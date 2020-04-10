@@ -13,14 +13,14 @@ namespace Server
 	{
 		public static bool UseEditGump = false;
 
-		public override bool IsVirtualItem { get { return true; } }
+		public override bool IsVirtualItem => true; 
 
-		public override bool DisplayWeight { get { return false; } }
-		public override bool DisplayLootType { get { return false; } }
+		public override bool DisplayWeight => false; 
+		public override bool DisplayLootType => false; 
 
-		public override double DefaultWeight { get { return 0; } }
+		public override double DefaultWeight => 0; 
 
-		public override string DefaultName { get { return "Offer Of Currency"; } }
+		public override string DefaultName => "Offer Of Currency"; 
 
 		public EditGump Editor { get; private set; }
 
@@ -103,11 +103,6 @@ namespace Server
 
 				base.OnDoubleClickSecureTrade(from);
 			}
-		}
-
-		public override void OnSingleClick(Mobile from)
-		{
-			LabelTo(from, "Offer: {0:#,0} platinum, {1:#,0} gold", Plat, Gold);
 		}
 
 		public override void GetProperties(ObjectPropertyList list)

@@ -48,7 +48,7 @@ namespace Server.Network
 		private static readonly EncodedPacketHandler[] m_EncodedHandlersLow;
 		private static readonly Dictionary<int, EncodedPacketHandler> m_EncodedHandlersHigh;
 
-		public static PacketHandler[] Handlers { get { return m_Handlers; } }
+		public static PacketHandler[] Handlers => m_Handlers; 
 
 		static PacketHandlers()
 		{
@@ -1503,16 +1503,9 @@ namespace Server.Network
 		{
 			Mobile m = state.Mobile;
 
-			if (state.StygianAbyss)
-			{
-				state.Send(new MobileUpdate(m));
-			}
-			else
-			{
-				state.Send(new MobileUpdateOld(m));
-			}
+            state.Send(new MobileUpdate(m));
 
-			state.Send(MobileIncoming.Create(state, m, m));
+            state.Send(MobileIncoming.Create(state, m, m));
 
 			m.SendEverything();
 
@@ -1670,11 +1663,6 @@ namespace Server.Network
 			}
 		}
 
-		public static bool SingleClickProps { get; set; }
-
-		public static Func<Mobile, Mobile, bool> MobileClickOverride;
-		public static Func<Mobile, Item, bool> ItemClickOverride;
-
 		private static void HandleSingleClick(Mobile m, IEntity target)
 		{
 			if (m == null || target == null || target.Deleted || !m.CanSee(target))
@@ -1682,48 +1670,19 @@ namespace Server.Network
 				return;
 			}
 
-			if (target is Item)
+			if (target is Item ti)
 			{
-				var o = (Item)target;
-
-				if (Utility.InUpdateRange(m.Location, o.GetWorldLocation()))
+				if (Utility.InUpdateRange(m.Location, ti.GetWorldLocation()))
 				{
-					if (ItemClickOverride == null || !ItemClickOverride(m, o))
-					{
-						if (SingleClickProps && m.ViewOPL)
-						{
-							o.OnAosSingleClick(m);
-						}
-						else if (m.Region.OnSingleClick(m, o))
-						{
-							if (o.Parent is Item)
-							{
-								((Item)o.Parent).OnSingleClickContained(m, o);
-							}
-
-							o.OnSingleClick(m);
-						}
-					}
-				}
+                    ti.OnAosSingleClick(m);
+                }
 			}
-			else if (target is Mobile)
+			else if (target is Mobile tm)
 			{
-				var o = (Mobile)target;
-
-				if (Utility.InUpdateRange(m, o))
+				if (Utility.InUpdateRange(m, tm))
 				{
-					if (MobileClickOverride == null || !MobileClickOverride(m, o))
-					{
-						if (SingleClickProps && m.ViewOPL)
-						{
-							o.OnAosSingleClick(m);
-						}
-						else if (m.Region.OnSingleClick(m, o))
-						{
-							o.OnSingleClick(m);
-						}
-					}
-				}
+                    tm.OnAosSingleClick(m);
+                }
 			}
 		}
 
@@ -1940,7 +1899,7 @@ namespace Server.Network
 
 		public static void BatchQueryProperties(NetState state, PacketReader pvSrc)
 		{
-			if (state == null || state.Mobile == null || !state.Mobile.ViewOPL)
+			if (state == null || state.Mobile == null)
 			{
 				return;
 			}
@@ -1983,7 +1942,7 @@ namespace Server.Network
 
 		public static void QueryProperties(NetState state, PacketReader pvSrc)
 		{
-			if (state == null || state.Mobile == null || !state.Mobile.ViewOPL)
+			if (state == null || state.Mobile == null)
 			{
 				return;
 			}
@@ -2232,16 +2191,9 @@ namespace Server.Network
 		{
 			var target = World.FindEntity(pvSrc.ReadInt32());
 
-            if (target != null && ObjectPropertyList.Enabled)
+            if (target != null)
             {
-                if (!state.Mobile.ViewOPL)
-                {
-                    HandleSingleClick(state.Mobile, target);
-                }
-                else
-                {
-                    ContextMenu.Display(state.Mobile, target);
-                }
+                ContextMenu.Display(state.Mobile, target);
             }
 		}
 
@@ -2544,20 +2496,9 @@ namespace Server.Network
 
 			state.Send(MobileIncoming.Create(state, m, m));
 
-			if (state.NewMobileIncoming)
-			{
-				state.Send(new MobileUpdate(m));
-			}
-			else if (state.StygianAbyss)
-			{
-				state.Send(new MobileUpdate(m));
-			}
-			else
-			{
-				state.Send(new MobileUpdateOld(m));
-			}
+            state.Send(new MobileUpdate(m));
 
-			m.SendEverything();
+            m.SendEverything();
 
 			m.CheckLightLevels(true);
 
@@ -3019,15 +2960,8 @@ namespace Server.Network
 
 				state.Send(SupportedFeatures.Instantiate(state));
 
-				if (state.NewCharacterList)
-				{
-                    state.Send(new CharacterList(state.Account, state.CityInfo, state.IsEnhancedClient));
-                }
-				else
-				{
-					state.Send(new CharacterListOld(state.Account, state.CityInfo));
-				}
-			}
+                state.Send(new CharacterList(state.Account, state.CityInfo, state.IsEnhancedClient));
+            }
 			else
 			{
 				state.Dispose();

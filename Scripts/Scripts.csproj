@@ -254,6 +254,9 @@
     <Compile Include="Commands\VisibilityList.cs">
       <SubType>Code</SubType>
     </Compile>
+	  <Compile Include="Commands\WhatIsIt.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Commands\Wipe.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2530,7 +2533,6 @@
     <Compile Include="Mobiles\NPCs\BaseGuildmaster.cs" />
     <Compile Include="Mobiles\NPCs\BaseHealer.cs" />
     <Compile Include="Mobiles\NPCs\BaseHire.cs" />
-    <Compile Include="Mobiles\NPCs\BaseShieldGuard.cs" />
     <Compile Include="Mobiles\NPCs\BaseVendor.cs" />
     <Compile Include="Mobiles\NPCs\Beekeeper.cs" />
     <Compile Include="Mobiles\NPCs\Belulah.cs" />
@@ -2549,7 +2551,6 @@
     <Compile Include="Mobiles\NPCs\Cailla.cs" />
     <Compile Include="Mobiles\NPCs\Calendor.cs" />
     <Compile Include="Mobiles\NPCs\Carpenter.cs" />
-    <Compile Include="Mobiles\NPCs\ChaosGuard.cs" />
     <Compile Include="Mobiles\NPCs\Chiyo.cs" />
     <Compile Include="Mobiles\NPCs\Churchill.cs" />
     <Compile Include="Mobiles\NPCs\Ciala.cs" />
@@ -2572,7 +2573,6 @@
     <Compile Include="Mobiles\NPCs\Emerillo.cs" />
     <Compile Include="Mobiles\NPCs\Enigma.cs" />
     <Compile Include="Mobiles\NPCs\Enrico.cs" />
-    <Compile Include="Mobiles\NPCs\EnshroudedFigure.cs" />
     <Compile Include="Mobiles\NPCs\EscortableMage.cs" />
     <Compile Include="Mobiles\NPCs\Escortables.cs" />
     <Compile Include="Mobiles\NPCs\EvilHealer.cs" />
@@ -2607,9 +2607,7 @@
     <Compile Include="Mobiles\NPCs\HarborMaster.cs" />
     <Compile Include="Mobiles\NPCs\Healer.cs" />
     <Compile Include="Mobiles\NPCs\HealerGuildmaster.cs" />
-    <Compile Include="Mobiles\NPCs\Henchman.cs" />
     <Compile Include="Mobiles\NPCs\Herbalist.cs" />
-    <Compile Include="Mobiles\NPCs\HiddenFigure.cs" />
     <Compile Include="Mobiles\NPCs\HireBard.cs" />
     <Compile Include="Mobiles\NPCs\HireBardArcher.cs" />
     <Compile Include="Mobiles\NPCs\HireBeggar.cs" />
@@ -2629,7 +2627,6 @@
     <Compile Include="Mobiles\NPCs\IronWorker.cs" />
     <Compile Include="Mobiles\NPCs\Jacob.cs" />
     <Compile Include="Mobiles\NPCs\Jamal.cs" />
-    <Compile Include="Mobiles\NPCs\JedahEntille.cs" />
     <Compile Include="Mobiles\NPCs\Jelrice.cs" />
     <Compile Include="Mobiles\NPCs\Jeweler.cs" />
     <Compile Include="Mobiles\NPCs\Jillian.cs" />
@@ -2676,7 +2673,6 @@
     <Compile Include="Mobiles\NPCs\Odell.cs" />
     <Compile Include="Mobiles\NPCs\Olaeni.cs" />
     <Compile Include="Mobiles\NPCs\Olla.cs" />
-    <Compile Include="Mobiles\NPCs\OrderGuard.cs" />
     <Compile Include="Mobiles\NPCs\Patricus.cs" />
     <Compile Include="Mobiles\NPCs\Peasant.cs" />
     <Compile Include="Mobiles\NPCs\PersonalAttendant.cs" />
@@ -3028,7 +3024,6 @@
     <Compile Include="Quests\UnfadingMemories.cs" />
     <Compile Include="Items\Addons\HavenCannon.cs" />
     <Compile Include="Mobiles\NPCs\MilitiaCanoneer.cs" />
-    <Compile Include="Mobiles\Normal\MilitiaFighter.cs" />
     <Compile Include="Quests\Deprecated\DarkTidesQuest.cs" />
     <Compile Include="Quests\Deprecated\EminosUndertakingQuest.cs" />
     <Compile Include="Quests\Deprecated\HaochisTrialsQuest.cs" />
@@ -10705,184 +10700,67 @@
     <Compile Include="Services\Virtues\VirtueStatusGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\BaseXmlSpawner.cs">
+    <Compile Include="Services\XmlSpawner\BaseXmlSpawner.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\ItemFlags.cs">
+    <Compile Include="Services\XmlSpawner\ItemFlags.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\PacketHandlerOverrides.cs">
+    <Compile Include="Services\XmlSpawner\PacketHandlerOverrides.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlAnimate.cs">
+    <Compile Include="Services\XmlSpawner\SpawnerExporter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlAosAttributes.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlPropsGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlData.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetCustomEnumGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlDate.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlDeathAction.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetListOptionGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlDialog.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetObjectGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlEnemyMastery.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetObjectTarget.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlFire.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetPoint2DGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlFollow.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetPoint3DGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlFreeze.cs">
+    <Compile Include="Services\XmlSpawner\XmlPropsGumps\XmlSetTimeSpanGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlHue.cs">
+    <Compile Include="Services\XmlSpawner\XmlSpawner2.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlIsEnemy.cs">
+    <Compile Include="Services\XmlSpawner\XmlSpawnerGumps.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlLifeDrain.cs">
+    <Compile Include="Services\XmlSpawner\XmlSpawnerSkillCheck.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlLightning.cs">
+    <Compile Include="Services\XmlSpawner\XmlTextEntryBook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlLocalVariable.cs">
+    <Compile Include="Services\XmlSpawner\XmlUtils\XmlAdd.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlMagicWord.cs">
+    <Compile Include="Services\XmlSpawner\XmlUtils\XmlCategorizedAddGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlManaDrain.cs">
+    <Compile Include="Services\XmlSpawner\XmlUtils\XmlFind.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlMessage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlMinionStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlMorph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlNextSpawn.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlPoison.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlRestrictEquip.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlSaveItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlSkill.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlSound.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlStamDrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlUse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttachments\XmlWeaponAbility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttach\XmlAttach.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttach\XmlAttachment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlAttach\XmlGetAttachGump.cs">
-      <SubType>Code</SubType>
-    </Compile> 
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlPropsGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetCustomEnumGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetListOptionGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetObjectGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetObjectTarget.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetPoint2DGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetPoint3DGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlPropsGumps\XmlSetTimeSpanGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlSpawner2.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlSpawnerGumps.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlSpawnerSkillCheck.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlTextEntryBook.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\WhatIsIt.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\WriteMulti.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\XmlAdd.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\XmlCategorizedAddGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\XmlEdit.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\XmlFind.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XmlSpawner Core\XmlUtils\XmlPartialCategorizedAddGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XMLSpawner Support\BaseArtifact.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XMLSpawner Support\SimpleArtifact.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XMLSpawner Support\SpawnerExporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\XmlSpawner\XMLSpawner Support\StaffCloak.cs">
+    <Compile Include="Services\XmlSpawner\XmlUtils\XmlPartialCategorizedAddGump.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Skills\Anatomy.cs">

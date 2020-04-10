@@ -92,6 +92,13 @@ namespace Server.SkillHandlers
             {
                 from.SendLocalizedMessage(1079576); // You cannot imbue this item.
             }
+            else if(item.GetType() == typeof(JukaBow))
+            {
+                if (((JukaBow)item).IsModified)
+                    from.SendLocalizedMessage(1079576); // You cannot imbue this item.
+                else
+                    return true;
+            }
             else if (item is BaseJewel && !(item is BaseRing) && !(item is BaseBracelet))
             {
                 from.SendLocalizedMessage(1079576); // You cannot imbue this item.
@@ -218,7 +225,7 @@ namespace Server.SkillHandlers
             typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososEarpieces), typeof(VirtuososKidGloves), typeof(VirtuososKilt), 
             typeof(VirtuososNecklace), typeof(VirtuososTunic), typeof(BestialArms), typeof(BestialEarrings), typeof(BestialGloves), typeof(BestialGorget),
             typeof(BestialHelm), typeof(BestialKilt), typeof(BestialLegs), typeof(BestialNecklace), typeof(BarbedWhip), typeof(BladedWhip),
-			typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
+			typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow)
         };
 
         private static Type[] _NonCraftables =

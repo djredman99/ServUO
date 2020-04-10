@@ -717,8 +717,6 @@ namespace Server
 
         #region Packet caches
         private Packet m_WorldPacket;
-        private Packet m_WorldPacketSA;
-        private Packet m_WorldPacketHS;
         private Packet m_RemovePacket;
 
         private Packet m_OPLPacket;
@@ -1928,7 +1926,7 @@ namespace Server
         /// <summary>
         ///     Has the item been deleted?
         /// </summary>
-        public bool Deleted { get { return GetFlag(ImplFlag.Deleted); } }
+        public bool Deleted => GetFlag(ImplFlag.Deleted); 
 
         [CommandProperty(AccessLevel.GameMaster)]
         public LootType LootType
@@ -1962,21 +1960,20 @@ namespace Server
         public static TimeSpan DefaultDecayTime { get { return m_DDT; } set { m_DDT = value; } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual int DecayMultiplier { get { return 1; } }
+        public virtual int DecayMultiplier => 1; 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool DefaultDecaySetting { get { return true; } }
+        public virtual bool DefaultDecaySetting => true; 
 
         [CommandProperty(AccessLevel.Decorator)]
-        public virtual TimeSpan DecayTime { get { return TimeSpan.FromMinutes(m_DDT.TotalMinutes * DecayMultiplier); } }
+        public virtual TimeSpan DecayTime => TimeSpan.FromMinutes(m_DDT.TotalMinutes * DecayMultiplier); 
 
         [CommandProperty(AccessLevel.Decorator)]
         public virtual bool Decays
         {
             get
             {
-                // TODO: Make item decay an option on the spawner
-                return DefaultDecaySetting && Movable && Visible && !HonestyItem/* && Spawner == null*/;
+                return DefaultDecaySetting && Movable && Visible && !HonestyItem;
             }
         }
 
@@ -2001,9 +1998,9 @@ namespace Server
 
         public DateTime LastMoved { get { return m_LastMovedTime; } set { m_LastMovedTime = value; } }
 
-        public virtual bool StackIgnoreItemID { get { return false; } }
-        public virtual bool StackIgnoreHue { get { return false; } }
-        public virtual bool StackIgnoreName { get { return false; } }
+        public virtual bool StackIgnoreItemID => false; 
+        public virtual bool StackIgnoreHue => false; 
+        public virtual bool StackIgnoreName => false; 
 
         public bool StackWith(Mobile from, Item dropped)
         {
@@ -2245,11 +2242,6 @@ namespace Server
 
         public void InvalidateProperties()
         {
-            if (!ObjectPropertyList.Enabled)
-            {
-                return;
-            }
-
             if (m_Map != null && m_Map != Map.Internal && !World.Loading)
             {
                 ObjectPropertyList oldList = m_PropertyList;
@@ -2269,10 +2261,8 @@ namespace Server
         }
 
         private readonly object _wpl = new object();
-        private readonly object _wplsa = new object();
-        private readonly object _wplhs = new object();
-
-        public Packet WorldPacket
+        
+        public virtual Packet WorldPacket
         {
             get
             {
@@ -2300,67 +2290,9 @@ namespace Server
             }
         }
 
-        public Packet WorldPacketSA
-        {
-            get
-            {
-                // This needs to be invalidated when any of the following changes:
-                //  - ItemID
-                //  - Amount
-                //  - Location
-                //  - Hue
-                //  - Packet Flags
-                //  - Direction
-
-                if (m_WorldPacketSA == null)
-                {
-                    lock (_wplsa)
-                    {
-                        if (m_WorldPacketSA == null)
-                        {
-                            m_WorldPacketSA = new WorldItemSA(this);
-                            m_WorldPacketSA.SetStatic();
-                        }
-                    }
-                }
-
-                return m_WorldPacketSA;
-            }
-        }
-
-        public virtual Packet WorldPacketHS
-        {
-            get
-            {
-                // This needs to be invalidated when any of the following changes:
-                //  - ItemID
-                //  - Amount
-                //  - Location
-                //  - Hue
-                //  - Packet Flags
-                //  - Direction
-
-                if (m_WorldPacketHS == null)
-                {
-                    lock (_wplhs)
-                    {
-                        if (m_WorldPacketHS == null)
-                        {
-                            m_WorldPacketHS = new WorldItemHS(this);
-                            m_WorldPacketHS.SetStatic();
-                        }
-                    }
-                }
-
-                return m_WorldPacketHS;
-            }
-        }
-
         public virtual void ReleaseWorldPackets()
         {
             Packet.Release(ref m_WorldPacket);
-            Packet.Release(ref m_WorldPacketSA);
-            Packet.Release(ref m_WorldPacketHS);
         }
 
         [CommandProperty(AccessLevel.Decorator)]
@@ -2413,7 +2345,7 @@ namespace Server
             }
         }
 
-        public virtual bool ForceShowProperties { get { return IsLockedDown || IsSecure; } }
+        public virtual bool ForceShowProperties => IsLockedDown || IsSecure; 
 
         public virtual int GetPacketFlags()
         {
@@ -2442,7 +2374,7 @@ namespace Server
             return true;
         }
 
-        public virtual bool HandlesOnMovement { get { return false; } }
+        public virtual bool HandlesOnMovement => false; 
 
         public virtual void OnMovement(Mobile m, Point3D oldLocation)
         { }
@@ -2553,9 +2485,9 @@ namespace Server
             return ((flags & toGet) != 0);
         }
 
-        int ISerializable.TypeReference { get { return m_TypeRef; } }
+        int ISerializable.TypeReference => m_TypeRef; 
 
-        int ISerializable.SerialIdentity { get { return m_Serial; } }
+        int ISerializable.SerialIdentity => m_Serial; 
 
         public virtual void Serialize(GenericWriter writer)
         {
@@ -3653,7 +3585,7 @@ namespace Server
 
         public void SendInfoTo(NetState state)
         {
-            SendInfoTo(state, state.Mobile != null && state.Mobile.ViewOPL);
+            SendInfoTo(state, state.Mobile != null);
         }
 
         public virtual void SendInfoTo(NetState state, bool sendOplPacket)
@@ -3668,21 +3600,10 @@ namespace Server
         
         protected virtual Packet GetWorldPacketFor(NetState state)
         {
-            if (state.HighSeas)
-            {
-                return WorldPacketHS;
-            }
-            else if (state.StygianAbyss)
-            {
-                return WorldPacketSA;
-            }
-            else
-            {
-                return WorldPacket;
-            }
+            return WorldPacket;
         }
 
-        public virtual bool IsVirtualItem { get { return false; } }
+        public virtual bool IsVirtualItem => false; 
 
         public virtual int GetTotal(TotalType type)
         {
@@ -3727,13 +3648,13 @@ namespace Server
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int TotalGold { get { return GetTotal(TotalType.Gold); } }
+        public int TotalGold => GetTotal(TotalType.Gold); 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int TotalItems { get { return GetTotal(TotalType.Items); } }
+        public int TotalItems => GetTotal(TotalType.Items); 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int TotalWeight { get { return GetTotal(TotalType.Weight); } }
+        public int TotalWeight => GetTotal(TotalType.Weight); 
 
         public virtual double DefaultWeight
         {
@@ -3794,9 +3715,9 @@ namespace Server
         }
 
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public int PileWeight { get { return (int)Math.Ceiling(Weight * Amount); } }
+        public int PileWeight => (int)Math.Ceiling(Weight * Amount); 
 
-        public virtual int HuedItemID { get { return m_ItemID; } }
+        public virtual int HuedItemID => m_ItemID; 
 
         [Hue, CommandProperty(AccessLevel.GameMaster)]
         public virtual int Hue
@@ -3816,13 +3737,12 @@ namespace Server
 
         public virtual bool HiddenQuestItemHue { get; set; }
 
-        public int QuestItemHue { get { return (HiddenQuestItemHue ? Hue : 0x04EA); } }
+        public int QuestItemHue => (HiddenQuestItemHue ? Hue : 0x04EA); 
 
-        public virtual bool Nontransferable { get { return QuestItem; } }
+        public virtual bool Nontransferable => QuestItem; 
 
         public virtual void HandleInvalidTransfer(Mobile from)
         {
-            // OSI sends 1074769, bug!
             if (QuestItem)
             {
                 from.SendLocalizedMessage(1049343);
@@ -4020,7 +3940,7 @@ namespace Server
 
             if (map != null && !Deleted)
             {
-                bool sendOPLUpdate = ObjectPropertyList.Enabled && (flags & ItemDelta.Properties) != 0;
+                bool sendOPLUpdate = (flags & ItemDelta.Properties) != 0;
 
                 Container contParent = m_Parent as Container;
 
@@ -4041,19 +3961,9 @@ namespace Server
                             {
                                 if (rootParent.CanSee(this) && rootParent.InRange(worldLoc, GetUpdateRange(rootParent)))
                                 {
-                                    if (ns.ContainerGridLines)
-                                    {
-                                        ns.Send(new ContainerContentUpdate6017(this));
-                                    }
-                                    else
-                                    {
-                                        ns.Send(new ContainerContentUpdate(this));
-                                    }
+                                    ns.Send(new ContainerContentUpdate(this));
 
-                                    if (rootParent.ViewOPL)
-                                    {
-                                        ns.Send(OPLPacket);
-                                    }
+                                    ns.Send(OPLPacket);
                                 }
                             }
                         }
@@ -4088,19 +3998,9 @@ namespace Server
                                     {
                                         if (tradeRecip.CanSee(this) && tradeRecip.InRange(worldLoc, GetUpdateRange(tradeRecip)))
                                         {
-                                            if (ns.ContainerGridLines)
-                                            {
-                                                ns.Send(new ContainerContentUpdate6017(this));
-                                            }
-                                            else
-                                            {
-                                                ns.Send(new ContainerContentUpdate(this));
-                                            }
+                                            ns.Send(new ContainerContentUpdate(this));
 
-                                            if (tradeRecip.ViewOPL)
-                                            {
-                                                ns.Send(OPLPacket);
-                                            }
+                                            ns.Send(OPLPacket);
                                         }
                                     }
                                 }
@@ -4136,19 +4036,9 @@ namespace Server
                                         {
                                             if (mob.CanSee(this))
                                             {
-                                                if (ns.ContainerGridLines)
-                                                {
-                                                    ns.Send(new ContainerContentUpdate6017(this));
-                                                }
-                                                else
-                                                {
-                                                    ns.Send(new ContainerContentUpdate(this));
-                                                }
+                                                ns.Send(new ContainerContentUpdate(this));
 
-                                                if (mob.ViewOPL)
-                                                {
-                                                    ns.Send(OPLPacket);
-                                                }
+                                                ns.Send(OPLPacket);
                                             }
                                         }
                                     }
@@ -4187,14 +4077,7 @@ namespace Server
                                 {
                                     if (m_Parent is Item)
                                     {
-                                        if (state.ContainerGridLines)
-                                        {
-                                            state.Send(new ContainerContentUpdate6017(this));
-                                        }
-                                        else
-                                        {
-                                            state.Send(new ContainerContentUpdate(this));
-                                        }
+                                        state.Send(new ContainerContentUpdate(this));
                                     }
                                     else if (m_Parent is Mobile)
                                     {
@@ -4209,10 +4092,7 @@ namespace Server
                                     state.Send(p);
                                 }
 
-                                if (m.ViewOPL)
-                                {
-                                    state.Send(OPLPacket);
-                                }
+                                state.Send(OPLPacket);
                             }
                         }
                     }
@@ -4250,10 +4130,7 @@ namespace Server
 
                                 state.Send(p);
 
-                                if (m.ViewOPL)
-                                {
-                                    state.Send(OPLPacket);
-                                }
+                                state.Send(OPLPacket);
                             }
                         }
 
@@ -4644,20 +4521,20 @@ namespace Server
         public virtual void OnAfterSpawn()
         { }
 
-        public virtual int PhysicalResistance { get { return 0; } }
-        public virtual int FireResistance { get { return 0; } }
-        public virtual int ColdResistance { get { return 0; } }
-        public virtual int PoisonResistance { get { return 0; } }
-        public virtual int EnergyResistance { get { return 0; } }
+        public virtual int PhysicalResistance => 0; 
+        public virtual int FireResistance => 0; 
+        public virtual int ColdResistance => 0; 
+        public virtual int PoisonResistance => 0; 
+        public virtual int EnergyResistance => 0; 
 
         [CommandProperty(AccessLevel.Counselor)]
-        public Serial Serial { get { return m_Serial; } }
+        public Serial Serial => m_Serial; 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public IEntity ParentEntity { get { return Parent as IEntity; } }
+        public IEntity ParentEntity => Parent as IEntity; 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public IEntity RootParentEntity { get { return RootParent as IEntity; } }
+        public IEntity RootParentEntity => RootParent as IEntity; 
 
         #region Location Location Location!
         public virtual void OnLocationChange(Point3D oldLocation)
@@ -4812,7 +4689,7 @@ namespace Server
             }
         }
 
-        public virtual string DefaultName { get { return null; } }
+        public virtual string DefaultName => null; 
 
         [CommandProperty(AccessLevel.Decorator)]
         public string Name
@@ -4967,7 +4844,7 @@ namespace Server
         protected virtual void OnAmountChange(int oldValue)
         { }
 
-        public virtual bool HandlesOnSpeech { get { return false; } }
+        public virtual bool HandlesOnSpeech => false; 
 
         public virtual void OnSpeech(SpeechEventArgs e)
         { }
@@ -5185,7 +5062,6 @@ namespace Server
             if (map == null)
                 return Point3D.Zero;
 
-            int myTop = -255;
             int x = p.m_X, y = p.m_Y;
             int z = int.MinValue;
 
@@ -5198,12 +5074,10 @@ namespace Server
             if (!landTile.Ignored && (landFlags & TileFlag.Impassable) == 0)
             {
                 if (landAvg <= maxZ)
-                {
                     z = landAvg;
-                }
             }
 
-            var tiles = map.Tiles.GetStaticTiles(x, y, true);
+            StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, true);
 
             for (int i = 0; i < tiles.Length; ++i)
             {
@@ -5211,48 +5085,36 @@ namespace Server
                 ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                 if (!id.Surface)
-                {
                     continue;
-                }
 
                 int top = tile.Z + id.CalcHeight;
-                if (top > p.Z) myTop = top;
 
                 if (top > maxZ || top < z)
-                {
                     continue;
-                }
 
                 z = top;
             }
 
-            var items = new List<Item>();
+            List<Item> items = new List<Item>();
 
-            var eable = map.GetItemsInRange(p, 0);
+            IPooledEnumerable<Item> eable = map.GetItemsInRange(p, 0);
 
             foreach (Item item in eable)
             {
                 if (item is BaseMulti || item.ItemID > TileData.MaxItemValue)
-                {
                     continue;
-                }
 
                 items.Add(item);
 
                 ItemData id = item.ItemData;
 
                 if (!id.Surface)
-                {
                     continue;
-                }
 
                 int top = item.Z + id.CalcHeight;
-                if (top > p.Z) myTop = top;
 
                 if (top > maxZ || top < z)
-                {
                     continue;
-                }
 
                 z = top;
             }
@@ -5260,14 +5122,10 @@ namespace Server
             eable.Free();
 
             if (z == int.MinValue)
-            {
                 return Point3D.Zero;
-            }
 
             if (z > maxZ)
-            {
                 return Point3D.Zero;
-            }
 
             m_OpenSlots = (1 << 20) - 1;
 
@@ -5282,27 +5140,19 @@ namespace Server
                 int checkTop = checkZ + id.CalcHeight;
 
                 if (checkTop == checkZ && !id.Surface)
-                {
                     ++checkTop;
-                }
 
                 int zStart = checkZ - z;
                 int zEnd = checkTop - z;
 
                 if (zStart >= 20 || zEnd < 0)
-                {
                     continue;
-                }
 
                 if (zStart < 0)
-                {
                     zStart = 0;
-                }
 
                 if (zEnd > 19)
-                {
                     zEnd = 19;
-                }
 
                 int bitCount = zEnd - zStart;
 
@@ -5318,27 +5168,19 @@ namespace Server
                 int checkTop = checkZ + id.CalcHeight;
 
                 if (checkTop == checkZ && !id.Surface)
-                {
                     ++checkTop;
-                }
 
                 int zStart = checkZ - z;
                 int zEnd = checkTop - z;
 
                 if (zStart >= 20 || zEnd < 0)
-                {
                     continue;
-                }
 
                 if (zStart < 0)
-                {
                     zStart = 0;
-                }
 
                 if (zEnd > 19)
-                {
                     zEnd = 19;
-                }
 
                 int bitCount = zEnd - zStart;
 
@@ -5348,58 +5190,41 @@ namespace Server
             int height = ItemData.Height;
 
             if (height == 0)
-            {
                 ++height;
-            }
 
             if (height > 30)
-            {
                 height = 30;
-            }
 
-            /*
-            if (myTop != -255)
+            int match = (1 << height) - 1;
+            bool okay = false;
+
+            for (int i = 0; i < 20; ++i)
             {
-                int match = (1 << height) - 1;
-                bool okay = false;
+                if ((i + height) > 20)
+                    match >>= 1;
 
-                for (int i = 0; i < 20; ++i)
+                okay = ((m_OpenSlots >> i) & match) == match;
+
+                if (okay)
                 {
-                    if ((i + height) > 20)
-                    {
-                        match >>= 1;
-                    }
-
-                    okay = ((m_OpenSlots >> i) & match) == match;
-                  
-                    if (okay)
-                    {
-                        z += i;
-                        break;
-                    }                   
+                    z += i;
+                    break;
                 }
-			    if (!okay)
-			    {
-				    return Point3D.Zero;
-			    }
             }
-            */
+
+            if (!okay)
+                return Point3D.Zero;
 
             height = ItemData.Height;
 
             if (height == 0)
-            {
                 ++height;
-            }
 
             if (landAvg > z && (z + height) > landZ)
-            {
                 return Point3D.Zero;
-            }
-            else if ((landFlags & TileFlag.Impassable) != 0 && landAvg > surfaceZ && (z + height) > landZ)
-            {
+
+            if ((landFlags & TileFlag.Impassable) != 0 && landAvg > surfaceZ && (z + height) > landZ)
                 return Point3D.Zero;
-            }
 
             for (int i = 0; i < tiles.Length; ++i)
             {
@@ -5410,13 +5235,10 @@ namespace Server
                 int checkTop = checkZ + id.CalcHeight;
 
                 if (checkTop > z && (z + height) > checkZ)
-                {
                     return Point3D.Zero;
-                }
-                else if ((id.Surface || id.Impassable) && checkTop > surfaceZ && (z + height) > checkZ)
-                {
+
+                if ((id.Surface || id.Impassable) && checkTop > surfaceZ && (z + height) > checkZ)
                     return Point3D.Zero;
-                }
             }
 
             for (int i = 0; i < items.Count; ++i)
@@ -5424,14 +5246,8 @@ namespace Server
                 Item item = items[i];
                 ItemData id = item.ItemData;
 
-                if (item.Z > p.Z + 17 || item.Z < p.Z) continue;
-
-                z += id.CalcHeight;
-
-                if (((item.Z + id.CalcHeight) >= maxZ) || (myTop != -255 && (item.Z + id.CalcHeight) > myTop)) /*&& (z + height) > item.Z)*/
-                {
+                if ((item.Z + id.CalcHeight) > z && (z + height) > item.Z)
                     return Point3D.Zero;
-                }
             }
 
             return new Point3D(x, y, z);
@@ -5480,7 +5296,7 @@ namespace Server
             //return root == null ? m_Location : new Point3D( (IPoint3D) root );
         }
 
-        public virtual bool BlocksFit { get { return false; } }
+        public virtual bool BlocksFit => false; 
 
         public Point3D GetSurfaceTop()
         {
@@ -5602,7 +5418,7 @@ namespace Server
         public virtual void OnSnoop(Mobile from)
         { }
 
-        public bool InSecureTrade { get { return (GetSecureTradeCont() != null); } }
+        public bool InSecureTrade => (GetSecureTradeCont() != null); 
 
         public SecureTradeContainer GetSecureTradeCont()
         {
@@ -5798,7 +5614,7 @@ namespace Server
             return false;
         }
 
-        public ItemData ItemData { get { return TileData.ItemTable[m_ItemID & TileData.MaxItemValue]; } }
+        public ItemData ItemData => TileData.ItemTable[m_ItemID & TileData.MaxItemValue]; 
 
         public virtual void OnItemUsed(Mobile from, Item item)
         {
@@ -5868,17 +5684,9 @@ namespace Server
             }
         }
 
-        public virtual bool CanTarget { get { return true; } }
-        public virtual bool DisplayLootType { get { return true; } }
-
-        public virtual void OnSingleClickContained(Mobile from, Item item)
-        {
-            if (m_Parent is Item)
-            {
-                ((Item)m_Parent).OnSingleClickContained(from, item);
-            }
-        }
-
+        public virtual bool CanTarget => true; 
+        public virtual bool DisplayLootType => true; 
+        
         public virtual void OnAosSingleClick(Mobile from)
         {
             ObjectPropertyList opl = PropertyList;
@@ -5887,54 +5695,7 @@ namespace Server
             {
                 from.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, opl.Header, Name, opl.HeaderArgs));
             }
-        }
-
-        public virtual void OnSingleClick(Mobile from)
-        {
-            if (Deleted || !from.CanSee(this))
-            {
-                return;
-            }
-
-            if (DisplayLootType)
-            {
-                LabelLootTypeTo(from);
-            }
-
-            NetState ns = from.NetState;
-
-            if (ns != null)
-            {
-                if (Name == null)
-                {
-                    if (m_Amount <= 1)
-                    {
-                        ns.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, LabelNumber, "", ""));
-                    }
-                    else
-                    {
-                        ns.Send(
-                            new MessageLocalizedAffix(
-                                m_Serial,
-                                m_ItemID,
-                                MessageType.Label,
-                                0x3B2,
-                                3,
-                                LabelNumber,
-                                "",
-                                AffixType.Append,
-                                String.Format(" : {0}", m_Amount),
-                                ""));
-                    }
-                }
-                else
-                {
-                    ns.Send(
-                        new UnicodeMessage(
-                            m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, "ENU", "", Name + (m_Amount > 1 ? " : " + m_Amount : "")));
-                }
-            }
-        }
+        }        
 
         private static bool m_ScissorCopyLootType;
 
@@ -6297,7 +6058,7 @@ namespace Server
 		[CommandProperty(AccessLevel.GameMaster)]
 		public DateTime Expires { get; set; }
 		
-		public virtual TimeSpan TickDuration { get { return TimeSpan.FromMinutes(1); } }
+		public virtual TimeSpan TickDuration => TimeSpan.FromMinutes(1); 
 		
 		public Timer Timer { get; set; }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Server.ContextMenus;
 using Server.Engines.Craft;
-using Server.Engines.XmlSpawner2;
 using Server.Network;
 using Server.Mobiles;
 using AMA = Server.Items.ArmorMeditationAllowance;
@@ -121,21 +120,6 @@ namespace Server.Items
 
         public abstract AMT MaterialType { get; }
 
-        public virtual int RevertArmorBase
-        {
-            get
-            {
-                return ArmorBase;
-            }
-        }
-        public virtual int ArmorBase
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
         public virtual AMA DefMedAllowance
         {
             get
@@ -171,7 +155,7 @@ namespace Server.Items
                 return 0;
             }
         }
-        public virtual int AosStrReq
+        public virtual int StrReq
         {
             get
             {
@@ -311,6 +295,30 @@ namespace Server.Items
             set
             {
                 m_Meditate = value;
+            }
+        }
+
+        public int ArmorBase
+        {
+            get
+            {
+                switch (MaterialType)
+                {
+                    default:
+                    case ArmorMaterialType.Cloth: return 0;
+                    case ArmorMaterialType.Spined:
+                    case ArmorMaterialType.Horned:
+                    case ArmorMaterialType.Barbed:
+                    case ArmorMaterialType.Leather: return 13;
+                    case ArmorMaterialType.Studded: return 16;
+                    case ArmorMaterialType.Ringmail: return 22;
+                    case ArmorMaterialType.Chainmail: return 28;
+                    case ArmorMaterialType.Bone: return 30;
+                    case ArmorMaterialType.Plate:
+                    case ArmorMaterialType.Dragon:
+                    case ArmorMaterialType.Wood:
+                    case ArmorMaterialType.Stone: return 40;
+                }
             }
         }
 
@@ -745,7 +753,7 @@ namespace Server.Items
                     return 125;
                 }
 
-                return m_StrReq == -1 ? AosStrReq : m_StrReq;
+                return m_StrReq == -1 ? StrReq : m_StrReq;
             }
             set
             {
@@ -2158,10 +2166,7 @@ namespace Server.Items
                 }
             }
 
-            if (!Server.Engines.XmlSpawner2.XmlAttach.CheckCanEquip(this, from))
-                return false;
-            else
-                return base.CanEquip(from);
+            return base.CanEquip(from);
         }
 
         public override bool CheckPropertyConfliction(Mobile m)
@@ -2200,8 +2205,6 @@ namespace Server.Items
                     from.AddStatMod(new StatMod(StatType.Int, modName + "Int", intBonus, TimeSpan.Zero));
             }
 
-            Server.Engines.XmlSpawner2.XmlAttach.CheckOnEquip(this, from);
-
             return base.OnEquip(from);
         }
 
@@ -2226,8 +2229,6 @@ namespace Server.Items
                     SetHelper.RemoveSetBonus(m, SetID, this);
                 #endregion
             }
-
-            Server.Engines.XmlSpawner2.XmlAttach.CheckOnRemoved(this, parent);
 
             base.OnRemoved(parent);
         }
@@ -2671,8 +2672,6 @@ namespace Server.Items
 
             if (m_HitPoints >= 0 && m_MaxHitPoints > 0)
                 list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
-
-            Server.Engines.XmlSpawner2.XmlAttach.AddAttachmentProperties(this, list);
 
             if (IsSetItem && !m_SetEquipped)
             {

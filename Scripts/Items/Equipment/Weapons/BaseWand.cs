@@ -29,15 +29,15 @@ namespace Server.Items
         public BaseWand(WandEffect effect, int minCharges, int maxCharges)
             : base(Utility.RandomList(0xDF2, 0xDF3, 0xDF4, 0xDF5))
         {
-            this.Weight = 1.0;
-            this.Effect = effect;
-            this.Charges = Utility.RandomMinMax(minCharges, maxCharges);
+            Weight = 1.0;
+            Effect = effect;
+            Charges = Utility.RandomMinMax(minCharges, maxCharges);
 
             if (m_WandEffect < WandEffect.None)
             {
-                this.Attributes.SpellChanneling = 1;
-                this.Attributes.CastSpeed = -1;
-                this.WeaponAttributes.MageWeapon = Utility.RandomMinMax(1, 10);
+                Attributes.SpellChanneling = 1;
+                Attributes.CastSpeed = -1;
+                WeaponAttributes.MageWeapon = Utility.RandomMinMax(1, 10);
             }
         }
 
@@ -60,35 +60,28 @@ namespace Server.Items
                 return WeaponAbility.Disarm;
             }
         }
-        public override int AosStrengthReq
+        public override int StrengthReq
         {
             get
             {
                 return 5;
             }
         }
-        public override int AosMinDamage
+        public override int MinDamage
         {
             get
             {
                 return 9;
             }
         }
-        public override int AosMaxDamage
+        public override int MaxDamage
         {
             get
             {
                 return 11;
             }
         }
-        public override int AosSpeed
-        {
-            get
-            {
-                return 40;
-            }
-        }
-        public override float MlSpeed
+        public override float Speed
         {
             get
             {
@@ -253,87 +246,6 @@ namespace Server.Items
                     list.Add(1017339, this.m_Charges.ToString());
                     break; // mana drain charges: ~1_val~
             }
-        }
-
-        public override void OnSingleClick(Mobile from)
-        {
-            ArrayList attrs = new ArrayList();
-
-            if (this.DisplayLootType)
-            {
-                if (this.LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-                else if (this.LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-            }
-
-            if (!this.Identified)
-            {
-                attrs.Add(new EquipInfoAttribute(1038000)); // Unidentified
-            }
-            else
-            {
-                int num = 0;
-
-                switch ( this.m_WandEffect )
-                {
-                    case WandEffect.Clumsiness:
-                        num = 3002011;
-                        break;
-                    case WandEffect.Identification:
-                        num = 1044063;
-                        break;
-                    case WandEffect.Healing:
-                        num = 3002014;
-                        break;
-                    case WandEffect.Feeblemindedness:
-                        num = 3002013;
-                        break;
-                    case WandEffect.Weakness:
-                        num = 3002018;
-                        break;
-                    case WandEffect.MagicArrow:
-                        num = 3002015;
-                        break;
-                    case WandEffect.Harming:
-                        num = 3002022;
-                        break;
-                    case WandEffect.Fireball:
-                        num = 3002028;
-                        break;
-                    case WandEffect.GreaterHealing:
-                        num = 3002039;
-                        break;
-                    case WandEffect.Lightning:
-                        num = 3002040;
-                        break;
-                    case WandEffect.ManaDraining:
-                        num = 3002041;
-                        break;
-                }
-
-                if (num > 0)
-                    attrs.Add(new EquipInfoAttribute(num, this.m_Charges));
-            }
-
-            int number;
-
-            if (this.Name == null)
-            {
-                number = 1017085;
-            }
-            else
-            {
-                this.LabelTo(from, this.Name);
-                number = 1041000;
-            }
-
-            if (attrs.Count == 0 && this.Crafter == null && this.Name != null)
-                return;
-
-            EquipmentInfo eqInfo = new EquipmentInfo(number, this.Crafter, false, (EquipInfoAttribute[])attrs.ToArray(typeof(EquipInfoAttribute)));
-
-            from.Send(new DisplayEquipmentInfo(this, eqInfo));
         }
 
         public void Cast(Spell spell)

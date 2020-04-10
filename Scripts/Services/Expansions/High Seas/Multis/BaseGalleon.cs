@@ -597,10 +597,8 @@ namespace Server.Multis
                 {
                     default:
                     case CannonPower.Pumpkin:
-                        {
-                            cannon = new PumpkinCannon(this);
-                            break;
-                        }
+                        cannon = new PumpkinCannon(this);
+                        break;
                     case CannonPower.Light:
                         cannon = new Culverin(this);
                         break;
@@ -819,30 +817,39 @@ namespace Server.Multis
 
         public override void OnAfterDelete()
         {
-            foreach (var fixture in Fixtures.Where(f => !f.Deleted).ToList())
+            List<Item> list = new List<Item>(Fixtures.Where(f => !f.Deleted));
+
+            foreach (var fixture in list)
             {
                 fixture.Delete();
             }
 
             if (Cannons != null)
             {
-                List<Item> cannons = new List<Item>(Cannons);
+                list = new List<Item>(Cannons);
 
-                foreach (var cannon in cannons.Where(c => c != null && !c.Deleted).ToList())
+                foreach (var cannon in list)
                 {
                     cannon.Delete();
                 }
 
-                ColUtility.Free(cannons);
+                ColUtility.Free(Cannons);
             }
 
             if (Addons != null)
             {
-                foreach (var addon in Addons.Keys.Where(a => a != null && !a.Deleted).ToList())
+                list = new List<Item>(Addons.Keys.Where(a => a != null && !a.Deleted));
+
+                foreach (var addon in list)
                 {
                     addon.Delete();
                 }
+
+                Addons.Clear();
             }
+
+            ColUtility.Free(list);
+            ColUtility.Free(Fixtures);
 
             if (CapturedCaptain != null)
             {
@@ -1355,7 +1362,18 @@ namespace Server.Multis
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)6);
+            writer.Write((int)7);
+
+            writer.Write(_InternalCannon == null ? 0 : _InternalCannon.Count);
+
+            if (_InternalCannon != null)
+            {
+                foreach (var kvp in _InternalCannon)
+                {
+                    writer.Write(kvp.Key);
+                    writer.Write(kvp.Value);
+                }
+            }
 
             writer.WriteItemList(Fixtures, true);
 
@@ -1400,6 +1418,29 @@ namespace Server.Multis
 
             switch (version)
             {
+                case 7:
+                    var c = reader.ReadInt();
+
+                    if (c > 0)
+                    {
+                        if (_InternalCannon == null)
+                        {
+                            _InternalCannon = new Dictionary<Item, Item>();
+                        }
+
+                        for (int i = 0; i < c; i++)
+                        {
+                            var cannon = reader.ReadItem();
+                            var pad = reader.ReadItem();
+
+                            if (cannon != null && pad != null)
+                            {
+                                _InternalCannon[cannon] = pad;
+                            }
+                        }
+                    }
+
+                    goto case 6;
                 case 6:
                     Fixtures = reader.ReadStrongItemList();
                     goto case 5;

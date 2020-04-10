@@ -747,61 +747,18 @@ namespace Server.Items
 			}
 			else if (Parent is Item)
 			{
-				// What will happen if the client doesn't know about our parent?
-				if (ns.ContainerGridLines)
-				{
-					to.Send(new ContainerContentUpdate6017(this));
-				}
-				else
-				{
-					to.Send(new ContainerContentUpdate(this));
-				}
-			}
+                to.Send(new ContainerContentUpdate(this));
+            }
 			else if (Parent is Mobile)
 			{
 				// What will happen if the client doesn't know about our parent?
 				to.Send(new EquipUpdate(this));
 			}
 
-			if (ns.HighSeas)
-			{
-				to.Send(new DisplaySpellbookHS(this));
-			}
-			else
-			{
-				to.Send(new DisplaySpellbook(this));
-			}
+            to.Send(new DisplaySpellbook(this));
 
-			if (ObjectPropertyList.Enabled)
-			{
-				if (ns.NewSpellbook)
-				{
-					to.Send(new NewSpellbookContent(this, ItemID, BookOffset + 1, m_Content));
-				}
-				else
-				{
-					if (ns.ContainerGridLines)
-					{
-						to.Send(new SpellbookContent6017(m_Count, BookOffset + 1, m_Content, this));
-					}
-					else
-					{
-						to.Send(new SpellbookContent(m_Count, BookOffset + 1, m_Content, this));
-					}
-				}
-			}
-			else
-			{
-				if (ns.ContainerGridLines)
-				{
-					to.Send(new SpellbookContent6017(m_Count, BookOffset + 1, m_Content, this));
-				}
-				else
-				{
-					to.Send(new SpellbookContent(m_Count, BookOffset + 1, m_Content, this));
-				}
-			}
-		}
+            to.Send(new SpellbookContent(this, ItemID, BookOffset + 1, m_Content));
+        }
 
         public override void AddNameProperties(ObjectPropertyList list)
         {
@@ -995,18 +952,6 @@ namespace Server.Items
         public virtual void AddProperty(ObjectPropertyList list)
         {
         }
-
-		public override void OnSingleClick(Mobile from)
-		{
-			base.OnSingleClick(from);
-
-			if (m_Crafter != null)
-			{
-				LabelTo(from, 1050043, m_Crafter.TitleName); // crafted by ~1_NAME~
-			}
-
-			LabelTo(from, 1042886, m_Count.ToString());
-		}
 
 		public override void OnDoubleClick(Mobile from)
 		{

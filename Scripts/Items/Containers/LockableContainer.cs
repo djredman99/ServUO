@@ -300,6 +300,17 @@ namespace Server.Items
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
         {
+            if (this is SecretChest sc)
+            {
+                if (m_Locked && from.IsPlayer() && !sc.CheckPermission(from))
+                {
+                    from.SendLocalizedMessage(1151591); // You cannot place items into a locked chest!
+                    return false;
+                }
+
+                return base.OnDragDropInto(from, item, p);
+            }
+
             if (from.AccessLevel < AccessLevel.GameMaster && m_Locked)
             {
                 from.SendLocalizedMessage(501747); // It appears to be locked.
@@ -313,6 +324,11 @@ namespace Server.Items
         {
             if (!base.CheckLift(from, item, ref reject))
                 return false;
+
+            if (this is SecretChest)
+            {
+                return true;
+            }
 
             if (item != this && from.AccessLevel < AccessLevel.GameMaster && m_Locked)
                 return false;
@@ -434,19 +450,6 @@ namespace Server.Items
             {
                 list.Add(1041645); // recovered from a shipwreck
             }
-        }
-
-        public override void OnSingleClick(Mobile from)
-        {
-            base.OnSingleClick(from);
-
-			if (m_Crafter != null)
-			{
-				LabelTo(from, 1050043, m_Crafter.Name); // crafted by ~1_NAME~
-			}
-
-			if (m_IsShipwreckedItem)
-                LabelTo(from, 1041645);	//recovered from a shipwreck
         }
 
         #region ICraftable Members
